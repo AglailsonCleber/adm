@@ -1,0 +1,87 @@
+/* styles/VisualizarColaborador.module.css */
+
+/* Estilos para o menu de abas */
+.tabMenu {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ccc;
+}
+
+.tabLink {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+.tabLink:hover {
+    background-color: #ddd;
+}
+
+.tabLinkActive {
+    background-color: #326ab3;
+    color: white;
+}
+
+/* Estilos para o conteúdo das abas */
+.tabContent {
+    display: none;
+    padding: 20px;
+}
+
+.tabContent h2 {
+    margin-top: 0;
+}
+
+/* Estilo básico da tabela */
+.table {
+    width: 100%; /* A tabela ocupa toda a largura disponível */
+    border-collapse: collapse; /* Remove espaços entre as células da tabela */
+    margin: 20px 0; /* Margem superior e inferior */
+    font-size: 16px;
+    text-align: left;
+}
+
+/* Estilo para o cabeçalho da tabela */
+.table thead th {
+    background-color: #326ab3; /* Cor de fundo do cabeçalho */
+    color: white; /* Cor do texto no cabeçalho */
+    padding: 12px 15px; /* Espaçamento interno das células do cabeçalho */
+    text-align: left;
+    border-bottom: 2px solid #ddd; /* Linha inferior do cabeçalho */
+}
+
+/* Estilo para o corpo da tabela */
+.table tbody td {
+    padding: 12px 15px; /* Espaçamento interno das células do corpo */
+    border-bottom: 1px solid #ddd; /* Linha inferior das células */
+}
+
+/* Cor de fundo alternada para as linhas */
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Cor de fundo para as linhas pares */
+}
+
+/* Cor de fundo ao passar o mouse sobre uma linha */
+.table tbody tr:hover {
+    background-color: #f1f1f1; /* Cor de fundo ao passar o mouse */
+}
+
+/* Estilo para a primeira célula da linha */
+.table tbody tr td:first-child {
+    font-weight: bold; /* Negrito na primeira célula */
+}
+
+/* Estilo para links dentro da tabela */
+.table tbody tr td a {
+    color: #326ab3; /* Cor do link */
+    text-decoration: none; /* Remove o sublinhado */
+}
+
+.table tbody tr td a:hover {
+    text-decoration: underline; /* Adiciona sublinhado ao passar o mouse sobre o link */
+}

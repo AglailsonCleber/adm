@@ -1,0 +1,33 @@
+.colaboradorForm {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.customLabel {
+    display: block;
+    margin: 5px 0;
+}
+
+.turnoSelect {
+    margin-bottom: 20px;
+}
+
+.salvarBtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.salvarBtn:hover {
+    background-color: #45a049;
+}
+
+.radioGroup {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}

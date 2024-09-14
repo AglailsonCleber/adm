@@ -1,0 +1,101 @@
+/* styles/Home.module.css */
+
+/* Cabeçalho */
+.header {
+    background-color: #326ab3;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    display: flex; /* Define o header como um contêiner flex */
+    align-items: center; /* Alinha os itens no centro verticalmente */
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    position: relative; /* Necessário para posicionar o botão */
+}
+
+/* Estilos do Menu Lateral */
+.sidemenu {
+    height: 100%;
+    width: 250px; /* Define a largura fixa */
+    position: fixed;
+    top: 0;
+    left: -250px; /* Mova-o para fora da tela inicialmente */
+    background-color: #326ab3;
+    overflow-x: hidden;
+    transition: transform 0.3s ease; /* Transição mais suave */
+    padding-top: 77px;
+    transform: translateX(0); /* Posição inicial */
+    z-index: 1; /* Garante que o menu fique acima de outros elementos */
+}
+
+/* Quando o menu estiver aberto */
+.open {
+    transform: translateX(250px); /* Move o menu para a posição desejada */
+}
+
+/* Links do menu lateral */
+.sidemenu a {
+    padding: 8px 16px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+}
+
+/* Hover nos links normais (exclui .closebtn) */
+.sidemenu a:not(.closebtn):hover {
+    background-color: #4abdcc; /* Apenas para links comuns */
+}
+
+/* Botão para fechar o menu */
+.sidemenu .closebtn {
+    position: absolute;
+    top: 16px;
+    right: 25px;
+    font-size: 32px;
+    cursor: pointer;
+    color: white; /* Cor do texto padrão */
+}
+
+/* Estilo do botão de fechar ao passar o mouse */
+.closebtn:hover {
+    color: #4abdcc; /* Altera apenas a cor do texto */
+    background-color: transparent; /* Remove qualquer fundo */
+}
+
+/* Botão para abrir o menu */
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #326ab3;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    width: 150px; /* Define a mesma largura do menu lateral */
+    height: auto; /* Permite que a altura se ajuste automaticamente */
+    position: absolute; /* Posiciona o botão de forma absoluta */
+    left: 0; /* Alinha à esquerda */
+    top: 50%; /* Move o botão para 50% da altura do header */
+    transform: translateY(-50%); /* Centraliza verticalmente */
+    z-index: 1;
+}
+
+/* Estilo do botão ao passar o mouse */
+.openbtn:hover {
+    color: #4abdcc; /* Altera apenas a cor do texto */
+    background-color: transparent; /* Remove qualquer fundo */
+}
+
+/* Área de Conteúdo */
+.mainContent {
+    margin-left: 0; /* Ajuste padrão */
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+/* Responsividade */
+@media screen and (max-width: 600px) {
+    .sidemenu a {
+        font-size: 16px;
+    }
+}
