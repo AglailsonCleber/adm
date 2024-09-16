@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import fs from 'fs';
+import path from 'path';
 import styles from '../styles/VisualizarColaborador.module.css';
 
 const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
@@ -9,8 +11,10 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
     const ultimaAvaliacaoPorMatricula = {};
 
     avaliacoes.forEach((avaliacao) => {
-      if (!ultimaAvaliacaoPorMatricula[avaliacao.matricula] ||
-          new Date(avaliacao.data) > new Date(ultimaAvaliacaoPorMatricula[avaliacao.matricula].data)) {
+      if (
+        !ultimaAvaliacaoPorMatricula[avaliacao.matricula] ||
+        new Date(avaliacao.data) > new Date(ultimaAvaliacaoPorMatricula[avaliacao.matricula].data)
+      ) {
         ultimaAvaliacaoPorMatricula[avaliacao.matricula] = avaliacao;
       }
     });
@@ -21,11 +25,11 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
   // Lógica para alternar entre as abas
   useEffect(() => {
     const openTab = (evt, tabId) => {
-      document.querySelectorAll(`.${styles.tabContent}`).forEach(tabContent => {
+      document.querySelectorAll(`.${styles.tabContent}`).forEach((tabContent) => {
         tabContent.style.display = 'none';
       });
 
-      document.querySelectorAll(`.${styles.tabLink}`).forEach(tabLink => {
+      document.querySelectorAll(`.${styles.tabLink}`).forEach((tabLink) => {
         tabLink.classList.remove(styles.tabLinkActive);
       });
 
@@ -38,12 +42,12 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
       defaultTab.click();
     }
 
-    document.querySelectorAll(`.${styles.tabLink}`).forEach(button => {
+    document.querySelectorAll(`.${styles.tabLink}`).forEach((button) => {
       button.addEventListener('click', (evt) => openTab(evt, button.dataset.tabId));
     });
 
     return () => {
-      document.querySelectorAll(`.${styles.tabLink}`).forEach(button => {
+      document.querySelectorAll(`.${styles.tabLink}`).forEach((button) => {
         button.removeEventListener('click', (evt) => openTab(evt, button.dataset.tabId));
       });
     };
@@ -52,8 +56,8 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
   // Renderizar colaboradores por turno
   const renderColaboradoresPorTurno = (turno) => {
     return colaboradores
-      .filter(colaborador => colaborador.turno === turno)
-      .map(colaborador => {
+      .filter((colaborador) => colaborador.turno === turno)
+      .map((colaborador) => {
         const avaliacao = avaliacoesFiltradas[colaborador.matricula] || {};
         return (
           <tr key={colaborador.matricula}>
@@ -73,10 +77,18 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
     <div className={styles.tabMenu}>
       {/* Menu de Abas */}
       <div className={styles.tabMenu}>
-        <button id={styles.turnoAdm} className={styles.tabLink} data-tab-id="tab1">ADM</button>
-        <button id={styles.turno1} className={styles.tabLink} data-tab-id="tab2">Turno 1</button>
-        <button id={styles.turno2} className={styles.tabLink} data-tab-id="tab3">Turno 2</button>
-        <button id={styles.turno3} className={styles.tabLink} data-tab-id="tab4">Turno 3</button>
+        <button id={styles.turnoAdm} className={styles.tabLink} data-tab-id="tab1">
+          ADM
+        </button>
+        <button id={styles.turno1} className={styles.tabLink} data-tab-id="tab2">
+          Turno 1
+        </button>
+        <button id={styles.turno2} className={styles.tabLink} data-tab-id="tab3">
+          Turno 2
+        </button>
+        <button id={styles.turno3} className={styles.tabLink} data-tab-id="tab4">
+          Turno 3
+        </button>
       </div>
 
       {/* Conteúdo das Abas */}
@@ -93,9 +105,7 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
               <th>Desafios</th>
             </tr>
           </thead>
-          <tbody>
-            {renderColaboradoresPorTurno('ADM')}
-          </tbody>
+          <tbody>{renderColaboradoresPorTurno('ADM')}</tbody>
         </table>
       </div>
 
@@ -112,9 +122,7 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
               <th>Desafios</th>
             </tr>
           </thead>
-          <tbody>
-            {renderColaboradoresPorTurno('1')}
-          </tbody>
+          <tbody>{renderColaboradoresPorTurno('1')}</tbody>
         </table>
       </div>
 
@@ -131,9 +139,7 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
               <th>Desafios</th>
             </tr>
           </thead>
-          <tbody>
-            {renderColaboradoresPorTurno('2')}
-          </tbody>
+          <tbody>{renderColaboradoresPorTurno('2')}</tbody>
         </table>
       </div>
 
@@ -150,9 +156,7 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
               <th>Desafios</th>
             </tr>
           </thead>
-          <tbody>
-            {renderColaboradoresPorTurno('3')}
-          </tbody>
+          <tbody>{renderColaboradoresPorTurno('3')}</tbody>
         </table>
       </div>
     </div>
@@ -160,15 +164,18 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
 };
 
 export const getStaticProps = async () => {
-  const resColaboradores = await fetch('http://localhost:3000/data/colaboradores.json');
-  const colaboradores = await resColaboradores.json();
-  
-  const resAvaliacoes = await fetch('http://localhost:3000/data/avaliacoes.json');
-  const avaliacoes = await resAvaliacoes.json();
+  const colaboradoresPath = path.join(process.cwd(), 'public', 'data', 'colaboradores.json');
+  const avaliacoesPath = path.join(process.cwd(), 'public', 'data', 'avaliacoes.json');
+
+  const colaboradoresData = fs.readFileSync(colaboradoresPath, 'utf-8');
+  const avaliacoesData = fs.readFileSync(avaliacoesPath, 'utf-8');
+
+  const colaboradores = JSON.parse(colaboradoresData).colaboradores;
+  const avaliacoes = JSON.parse(avaliacoesData);
 
   return {
     props: {
-      colaboradores: colaboradores.colaboradores,
+      colaboradores,
       avaliacoes,
     },
   };
