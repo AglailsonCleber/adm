@@ -1,7 +1,24 @@
-import React, { useEffect } from 'react';
-import styles from '../styles/VisualizarColaborador.module.css'; // Importe o CSS Module específico
+import React, { useEffect, useState } from 'react';
+import styles from '../styles/VisualizarColaborador.module.css';
 
-const VisualizarColaborador = () => {
+const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
+  const [avaliacoesFiltradas, setAvaliacoesFiltradas] = useState({});
+
+  // Filtrar as avaliações mais recentes por matrícula
+  useEffect(() => {
+    const ultimaAvaliacaoPorMatricula = {};
+
+    avaliacoes.forEach((avaliacao) => {
+      if (!ultimaAvaliacaoPorMatricula[avaliacao.matricula] ||
+          new Date(avaliacao.data) > new Date(ultimaAvaliacaoPorMatricula[avaliacao.matricula].data)) {
+        ultimaAvaliacaoPorMatricula[avaliacao.matricula] = avaliacao;
+      }
+    });
+
+    setAvaliacoesFiltradas(ultimaAvaliacaoPorMatricula);
+  }, [avaliacoes]);
+
+  // Lógica para alternar entre as abas
   useEffect(() => {
     const openTab = (evt, tabId) => {
       document.querySelectorAll(`.${styles.tabContent}`).forEach(tabContent => {
@@ -16,7 +33,6 @@ const VisualizarColaborador = () => {
       evt.currentTarget.classList.add(styles.tabLinkActive);
     };
 
-    // Aguarde o DOM estar pronto antes de selecionar o elemento
     const defaultTab = document.querySelector(`#${styles.turnoAdm}`);
     if (defaultTab) {
       defaultTab.click();
@@ -33,6 +49,26 @@ const VisualizarColaborador = () => {
     };
   }, []);
 
+  // Renderizar colaboradores por turno
+  const renderColaboradoresPorTurno = (turno) => {
+    return colaboradores
+      .filter(colaborador => colaborador.turno === turno)
+      .map(colaborador => {
+        const avaliacao = avaliacoesFiltradas[colaborador.matricula] || {};
+        return (
+          <tr key={colaborador.matricula}>
+            <td>{colaborador.matricula}</td>
+            <td>{colaborador.nome}</td>
+            <td>{avaliacao.data || 'N/A'}</td>
+            <td>{avaliacao.pontualidade || 'N/A'}</td>
+            <td>{avaliacao.atendimento || 'N/A'}</td>
+            <td>{avaliacao.responsabilidade || 'N/A'}</td>
+            <td>{avaliacao.desafios || 'N/A'}</td>
+          </tr>
+        );
+      });
+  };
+
   return (
     <div className={styles.tabMenu}>
       {/* Menu de Abas */}
@@ -43,31 +79,99 @@ const VisualizarColaborador = () => {
         <button id={styles.turno3} className={styles.tabLink} data-tab-id="tab4">Turno 3</button>
       </div>
 
-      {/* Conteúdos das Abas */}
+      {/* Conteúdo das Abas */}
       <div id="tab1" className={styles.tabContent}>
-        {/* Conteúdo da Aba 1 */}
         <table className={styles.table}>
-          {/* Tabela será preenchida pelo JS */}
+          <thead>
+            <tr>
+              <th>Matrícula</th>
+              <th>Nome</th>
+              <th>Data Avaliação</th>
+              <th>Pontualidade</th>
+              <th>Atendimento</th>
+              <th>Responsabilidade</th>
+              <th>Desafios</th>
+            </tr>
+          </thead>
+          <tbody>
+            {renderColaboradoresPorTurno('ADM')}
+          </tbody>
         </table>
       </div>
 
-      {/* Outras abas */}
       <div id="tab2" className={styles.tabContent} style={{ display: 'none' }}>
-        <h2>Conteúdo da Aba 2</h2>
-        <p>Este é o conteúdo da segunda aba.</p>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Matrícula</th>
+              <th>Nome</th>
+              <th>Data Avaliação</th>
+              <th>Pontualidade</th>
+              <th>Atendimento</th>
+              <th>Responsabilidade</th>
+              <th>Desafios</th>
+            </tr>
+          </thead>
+          <tbody>
+            {renderColaboradoresPorTurno('1')}
+          </tbody>
+        </table>
       </div>
 
       <div id="tab3" className={styles.tabContent} style={{ display: 'none' }}>
-        <h2>Conteúdo da Aba 3</h2>
-        <p>Este é o conteúdo da terceira aba.</p>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Matrícula</th>
+              <th>Nome</th>
+              <th>Data Avaliação</th>
+              <th>Pontualidade</th>
+              <th>Atendimento</th>
+              <th>Responsabilidade</th>
+              <th>Desafios</th>
+            </tr>
+          </thead>
+          <tbody>
+            {renderColaboradoresPorTurno('2')}
+          </tbody>
+        </table>
       </div>
 
       <div id="tab4" className={styles.tabContent} style={{ display: 'none' }}>
-        <h2>Conteúdo da Aba 4</h2>
-        <p>Este é o conteúdo da quarta aba.</p>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Matrícula</th>
+              <th>Nome</th>
+              <th>Data Avaliação</th>
+              <th>Pontualidade</th>
+              <th>Atendimento</th>
+              <th>Responsabilidade</th>
+              <th>Desafios</th>
+            </tr>
+          </thead>
+          <tbody>
+            {renderColaboradoresPorTurno('3')}
+          </tbody>
+        </table>
       </div>
     </div>
   );
+};
+
+export const getStaticProps = async () => {
+  const resColaboradores = await fetch('http://localhost:3000/data/colaboradores.json');
+  const colaboradores = await resColaboradores.json();
+  
+  const resAvaliacoes = await fetch('http://localhost:3000/data/avaliacoes.json');
+  const avaliacoes = await resAvaliacoes.json();
+
+  return {
+    props: {
+      colaboradores: colaboradores.colaboradores,
+      avaliacoes,
+    },
+  };
 };
 
 export default VisualizarColaborador;
