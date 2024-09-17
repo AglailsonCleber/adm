@@ -5,13 +5,21 @@ import path from 'path';
 export default function handler(req, res) {
   if (req.method === 'POST') {
     const filePath = path.join(process.cwd(), 'public', 'data', 'avaliacoes.json');
-    const novoConteudo = req.body;
-
+    
     try {
+      // Verificar se o diretório existe
+      if (!fs.existsSync(path.dirname(filePath))) {
+        fs.mkdirSync(path.dirname(filePath), { recursive: true });
+      }
+
       // Ler o conteúdo atual do arquivo
-      const conteudoAtual = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-      
+      let conteudoAtual = [];
+      if (fs.existsSync(filePath)) {
+        conteudoAtual = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      }
+
       // Atualizar o conteúdo com as novas avaliações
+      const novoConteudo = req.body;
       const conteudoAtualizado = [...conteudoAtual, ...novoConteudo];
 
       // Salvar o conteúdo atualizado
@@ -20,7 +28,7 @@ export default function handler(req, res) {
       res.status(200).json({ message: 'Avaliações salvas com sucesso!' });
     } catch (error) {
       console.error('Erro ao salvar avaliações:', error);
-      res.status(500).json({ message: 'Erro ao salvar avaliações.' });
+      res.status(500).json({ message: 'Erro ao salvar avaliações.', error: error.message });
     }
   } else {
     res.setHeader('Allow', ['POST']);
