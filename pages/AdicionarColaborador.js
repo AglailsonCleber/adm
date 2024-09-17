@@ -70,10 +70,8 @@ export default function AdicionarColaborador() {
     }
   
     // Obter a data atual no formato 'YYYY/MM/DD'
-    //const dataAtual = new Date().toISOString().split('T')[0].replace(/-/g, '/');
     const dataAtual = new Date();
     const dataFormatada = `${dataAtual.getFullYear()}/${(dataAtual.getMonth() + 1).toString().padStart(2, '0')}/${dataAtual.getDate().toString().padStart(2, '0')}`;
-
   
     // Filtrar avaliações que foram alteradas
     const avaliacoesParaSalvar = Object.keys(avaliacoes)
@@ -118,7 +116,6 @@ export default function AdicionarColaborador() {
       console.error('Erro ao salvar avaliações:', error);
     }
   }, [avaliacoes, turno]);
-  
   
   // Função para lidar com as mudanças nos campos de avaliação
   const handleChange = (matricula, campo, valor) => {

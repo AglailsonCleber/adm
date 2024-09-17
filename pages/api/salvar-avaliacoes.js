@@ -4,31 +4,26 @@ import path from 'path';
 
 export default function handler(req, res) {
   if (req.method === 'POST') {
+    const filePath = path.join(process.cwd(), 'public', 'data', 'avaliacoes.json');
+    const novoConteudo = req.body;
+
     try {
-      // Caminho para o arquivo avaliacoes.json
-      const filePath = path.join(process.cwd(), 'public', 'data', 'avaliacoes.json');
+      // Ler o conteúdo atual do arquivo
+      const conteudoAtual = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      
+      // Atualizar o conteúdo com as novas avaliações
+      const conteudoAtualizado = [...conteudoAtual, ...novoConteudo];
 
-      // Ler o conteúdo atual do arquivo JSON
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
-      const avaliacoesExistentes = JSON.parse(fileContent);
+      // Salvar o conteúdo atualizado
+      fs.writeFileSync(filePath, JSON.stringify(conteudoAtualizado, null, 2), 'utf-8');
 
-      // Novas avaliações recebidas da requisição
-      const novasAvaliacoes = req.body;
-
-      // Combina avaliações existentes com novas
-      const avaliacoesAtualizadas = [...avaliacoesExistentes, ...novasAvaliacoes];
-
-      // Escrever as avaliações atualizadas no arquivo
-      fs.writeFileSync(filePath, JSON.stringify(avaliacoesAtualizadas, null, 2), 'utf-8');
-
-      // Retorna uma resposta de sucesso
       res.status(200).json({ message: 'Avaliações salvas com sucesso!' });
     } catch (error) {
       console.error('Erro ao salvar avaliações:', error);
-      res.status(500).json({ error: 'Erro ao salvar avaliações' });
+      res.status(500).json({ message: 'Erro ao salvar avaliações.' });
     }
   } else {
-    // Responde com erro se não for uma requisição POST
-    res.status(405).json({ error: 'Método não permitido' });
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

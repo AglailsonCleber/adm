@@ -6,19 +6,30 @@ import styles from '../styles/VisualizarColaborador.module.css';
 const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
   const [avaliacoesFiltradas, setAvaliacoesFiltradas] = useState({});
 
-  // Filtrar as avaliações mais recentes por matrícula
+  // Filtrar as avaliações mais recentes por matrícula e, em caso de empate, pelo código do registro
   useEffect(() => {
     const ultimaAvaliacaoPorMatricula = {};
-
+  
     avaliacoes.forEach((avaliacao) => {
+      // Caso 'avaliacao' seja um array com um único objeto, acesse o primeiro item
+      const avaliacaoItem = Array.isArray(avaliacao) ? avaliacao[0] : avaliacao;
+  
+      // Obter a avaliação existente para a matrícula, se houver
+      const avaliacaoExistente = ultimaAvaliacaoPorMatricula[avaliacaoItem.matricula];
+
+      // Verificar se deve substituir a avaliação existente
       if (
-        !ultimaAvaliacaoPorMatricula[avaliacao.matricula] ||
-        new Date(avaliacao.data) > new Date(ultimaAvaliacaoPorMatricula[avaliacao.matricula].data)
+        !avaliacaoExistente || // Se não há avaliação existente
+        new Date(avaliacaoItem.data) > new Date(avaliacaoExistente.data) || // Se a data da nova avaliação é mais recente
+        (
+          new Date(avaliacaoItem.data).getTime() === new Date(avaliacaoExistente.data).getTime() && 
+          avaliacaoItem.codigo > avaliacaoExistente.codigo // Se as datas são iguais, usa o código para desempatar
+        )
       ) {
-        ultimaAvaliacaoPorMatricula[avaliacao.matricula] = avaliacao;
+        ultimaAvaliacaoPorMatricula[avaliacaoItem.matricula] = avaliacaoItem;
       }
     });
-
+  
     setAvaliacoesFiltradas(ultimaAvaliacaoPorMatricula);
   }, [avaliacoes]);
 
@@ -67,7 +78,9 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
             <td>{avaliacao.pontualidade || 'N/A'}</td>
             <td>{avaliacao.atendimento || 'N/A'}</td>
             <td>{avaliacao.responsabilidade || 'N/A'}</td>
+            <td>{avaliacao.autonomia || 'N/A'}</td>
             <td>{avaliacao.desafios || 'N/A'}</td>
+            <td>{avaliacao.observacao || 'N/A'}</td>
           </tr>
         );
       });
@@ -102,7 +115,9 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
               <th>Pontualidade</th>
               <th>Atendimento</th>
               <th>Responsabilidade</th>
+              <th>Autonomia</th>
               <th>Desafios</th>
+              <th>Observação</th>
             </tr>
           </thead>
           <tbody>{renderColaboradoresPorTurno('ADM')}</tbody>
@@ -119,7 +134,9 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
               <th>Pontualidade</th>
               <th>Atendimento</th>
               <th>Responsabilidade</th>
+              <th>Autonomia</th>
               <th>Desafios</th>
+              <th>Observação</th>
             </tr>
           </thead>
           <tbody>{renderColaboradoresPorTurno('1')}</tbody>
@@ -136,7 +153,9 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
               <th>Pontualidade</th>
               <th>Atendimento</th>
               <th>Responsabilidade</th>
+              <th>Autonomia</th>
               <th>Desafios</th>
+              <th>Observação</th>
             </tr>
           </thead>
           <tbody>{renderColaboradoresPorTurno('2')}</tbody>
@@ -153,7 +172,9 @@ const VisualizarColaborador = ({ colaboradores, avaliacoes }) => {
               <th>Pontualidade</th>
               <th>Atendimento</th>
               <th>Responsabilidade</th>
+              <th>Autonomia</th>
               <th>Desafios</th>
+              <th>Observação</th>
             </tr>
           </thead>
           <tbody>{renderColaboradoresPorTurno('3')}</tbody>
