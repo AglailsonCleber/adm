@@ -54,13 +54,12 @@ export default function AdicionarColaborador() {
 
   // Função para salvar as avaliações
   const salvarAvaliacoes = useCallback(async () => {
-    // Obter as avaliações existentes para encontrar o próximo código
     let ultimoCodigo = 0;
+  
     try {
-      const response = await fetch('/data/avaliacoes.json'); // Certifique-se de que o caminho esteja correto
+      const response = await fetch('/data/avaliacoes.json');
       if (response.ok) {
         const avaliacoesExistentes = await response.json();
-        // Encontrar o maior código atual
         ultimoCodigo = Math.max(0, ...avaliacoesExistentes.map(avaliacao => parseInt(avaliacao.codigo, 10)));
       } else {
         console.error('Não foi possível carregar as avaliações existentes.');
@@ -69,29 +68,26 @@ export default function AdicionarColaborador() {
       console.error('Erro ao carregar avaliações existentes:', error);
     }
   
-    // Obter a data atual no formato 'YYYY/MM/DD'
     const dataAtual = new Date();
     const dataFormatada = `${dataAtual.getFullYear()}/${(dataAtual.getMonth() + 1).toString().padStart(2, '0')}/${dataAtual.getDate().toString().padStart(2, '0')}`;
   
-    // Filtrar avaliações que foram alteradas
     const avaliacoesParaSalvar = Object.keys(avaliacoes)
       .map(matricula => ({
         matricula,
         ...avaliacoes[matricula]
       }))
-      .filter(avaliacao => avaliacao.alterado); // Apenas incluir as avaliações alteradas
+      .filter(avaliacao => avaliacao.alterado);
   
     if (avaliacoesParaSalvar.length === 0) {
       alert('Nenhuma alteração detectada para salvar.');
       return;
     }
   
-    // Remover a propriedade 'alterado' e adicionar 'codigo' e 'data' antes de enviar
     const avaliacoesFiltradas = avaliacoesParaSalvar.map((avaliacao, index) => {
-      const { alterado, ...dadosSemAlterado } = avaliacao; // Desestruturando para remover 'alterado'
+      const { alterado, ...dadosSemAlterado } = avaliacao;
       return {
-        codigo: (ultimoCodigo + index + 1).toString(), // Definir o próximo código
-        data: dataFormatada, // Adicionar a data atual
+        codigo: (ultimoCodigo + index + 1).toString(),
+        data: dataFormatada,
         ...dadosSemAlterado
       };
     });
@@ -102,13 +98,12 @@ export default function AdicionarColaborador() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(avaliacoesFiltradas), // Enviando dados com 'codigo' e 'data'
+        body: JSON.stringify(avaliacoesFiltradas),
       });
   
       if (response.ok) {
         alert('Avaliações salvas com sucesso!');
-        // Resetar os valores das avaliações
-        await gerarFormularios(turno); // Recarregar os colaboradores do turno selecionado
+        await gerarFormularios(turno);
       } else {
         alert('Erro ao salvar avaliações.');
       }

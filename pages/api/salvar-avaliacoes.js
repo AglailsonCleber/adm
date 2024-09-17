@@ -7,22 +7,18 @@ export default function handler(req, res) {
     const filePath = path.join(process.cwd(), 'public', 'data', 'avaliacoes.json');
     
     try {
-      // Verificar se o diretório existe
       if (!fs.existsSync(path.dirname(filePath))) {
         fs.mkdirSync(path.dirname(filePath), { recursive: true });
       }
 
-      // Ler o conteúdo atual do arquivo
       let conteudoAtual = [];
       if (fs.existsSync(filePath)) {
         conteudoAtual = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
       }
 
-      // Atualizar o conteúdo com as novas avaliações
       const novoConteudo = req.body;
       const conteudoAtualizado = [...conteudoAtual, ...novoConteudo];
 
-      // Salvar o conteúdo atualizado
       fs.writeFileSync(filePath, JSON.stringify(conteudoAtualizado, null, 2), 'utf-8');
 
       res.status(200).json({ message: 'Avaliações salvas com sucesso!' });
