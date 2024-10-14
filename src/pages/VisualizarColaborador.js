@@ -12,18 +12,8 @@ const VisualizarColaborador = () => {
     const fetchData = async () => {
       try {
         const responseColaboradores = await fetch('/api/getDadosColaboradores'); // Corrigido para o nome correto da API
-        if (!responseColaboradores.ok) {
-          // Exibe a resposta completa em formato texto para debugar
-          const errorText = await response.text();
-          throw new Error(`Erro na requisição: ${errorText}`);
-        }
         const dataColaboradores = await responseColaboradores.json();
         const responseAvaliacoes = await fetch('/api/getDadosAvaliacoes'); // Corrigido para o nome correto da API
-        if (!responseAvaliacoes.ok) {
-          // Exibe a resposta completa em formato texto para debugar
-          const errorText = await response.text();
-          throw new Error(`Erro na requisição: ${errorText}`);
-        }
         const dataAvaliacoes = await responseAvaliacoes.json();
         setColaboradores(dataColaboradores.colaboradores);
         setAvaliacoes(dataAvaliacoes.avaliacoes);
