@@ -29,7 +29,10 @@
 
 /* Estilos para o conteúdo das abas */
 .tabContent {
-    display: none;
+    /* display: none; */
+    height: auto;
+    width: 97%;
+
     padding: 20px;
 }
 

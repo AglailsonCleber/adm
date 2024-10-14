@@ -1,106 +1,69 @@
-import { useState, useEffect, useCallback } from 'react';
-import styles from '../styles/AdicionarColaborador.module.css'; // Crie um arquivo CSS para estilizar
+import React, { useEffect, useState, useCallback } from 'react';
+import styles from '../styles/AdicionarAvaliacoes.module.css';
 
-export default function AdicionarColaborador() {
+export default function AdicionarAvaliacoes() {
   const [colaboradores, setColaboradores] = useState([]);
+  const [avaliacoes, setAvaliacoes] = useState([]);
   const [turno, setTurno] = useState('ADM');
-  const [avaliacoes, setAvaliacoes] = useState({});
-
-  // Função para ler o JSON de colaboradores
-  const lerJson = async (local) => {
-    try {
-      const response = await fetch(local);
-      if (!response.ok) {
-        throw new Error('Erro na requisição: ' + response.status);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/getDadosColaboradores');
+        const data = await response.json();
+        setColaboradores(data.colaboradores);
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
       }
-      const data = await response.json();
-      return data.colaboradores;
-    } catch (error) {
-      console.error("Erro ao ler JSON:", error);
-      throw error;
-    }
-  };
+    };
+    fetchData();
+  }, []);
 
-  // Função para gerar os formulários para os colaboradores filtrados por turno
   const gerarFormularios = async (turno) => {
-    try {
-      const colaboradores = await lerJson('/data/colaboradores.json'); // Certifique-se de que o caminho esteja correto
-      const colaboradoresFiltrados = colaboradores.filter(c => c.turno === turno);
-      setColaboradores(colaboradoresFiltrados);
-      
-      // Inicializar o estado das avaliações
-      const avaliacoesIniciais = {};
-      colaboradoresFiltrados.forEach(colaborador => {
-        avaliacoesIniciais[colaborador.matricula] = {
-          pontualidade: '',
-          atendimento: '',
-          responsabilidade: '',
-          autonomia: '',
-          desafios: '',
-          observacao: '',
-          alterado: false // Adicionando a propriedade 'alterado'
-        };
-      });
-      setAvaliacoes(avaliacoesIniciais);
-    } catch (error) {
-      console.error("Erro ao carregar colaboradores:", error);
-    }
+    const colaboradoresFiltrados = colaboradores.filter(c => c.turno === turno);
+    setColaboradores(colaboradoresFiltrados);
+
+    const avaliacoesIniciais = {};
+    colaboradoresFiltrados.forEach(colaborador => {
+      avaliacoesIniciais[colaborador.matricula] = {
+        pontualidade: '',
+        atendimento: '',
+        responsabilidade: '',
+        autonomia: '',
+        desafios: '',
+        observacao: '',
+        alterado: false
+      };
+    });
+    setAvaliacoes(avaliacoesIniciais);
   };
 
-  // Atualiza os formulários ao mudar o turno
   useEffect(() => {
     gerarFormularios(turno);
   }, [turno]);
 
-  // Função para salvar as avaliações
   const salvarAvaliacoes = useCallback(async () => {
-    let ultimoCodigo = 0;
-  
-    try {
-      const response = await fetch('/data/avaliacoes.json');
-      if (response.ok) {
-        const avaliacoesExistentes = await response.json();
-        ultimoCodigo = Math.max(0, ...avaliacoesExistentes.map(avaliacao => parseInt(avaliacao.codigo, 10)));
-      } else {
-        console.error('Não foi possível carregar as avaliações existentes.');
-      }
-    } catch (error) {
-      console.error('Erro ao carregar avaliações existentes:', error);
-    }
-  
-    const dataAtual = new Date();
-    const dataFormatada = `${dataAtual.getFullYear()}/${(dataAtual.getMonth() + 1).toString().padStart(2, '0')}/${dataAtual.getDate().toString().padStart(2, '0')}`;
-  
     const avaliacoesParaSalvar = Object.keys(avaliacoes)
       .map(matricula => ({
         matricula,
         ...avaliacoes[matricula]
       }))
       .filter(avaliacao => avaliacao.alterado);
-  
+
     if (avaliacoesParaSalvar.length === 0) {
       alert('Nenhuma alteração detectada para salvar.');
       return;
     }
-  
-    const avaliacoesFiltradas = avaliacoesParaSalvar.map((avaliacao, index) => {
-      const { alterado, ...dadosSemAlterado } = avaliacao;
-      return {
-        codigo: (ultimoCodigo + index + 1).toString(),
-        data: dataFormatada,
-        ...dadosSemAlterado
-      };
-    });
-  
+
     try {
-      const response = await fetch('/api/salvar-avaliacoes', {
+      const response = await fetch('/api/salvarAvaliacoes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(avaliacoesFiltradas),
+        body: JSON.stringify({ avaliacoes: avaliacoesParaSalvar, turno })
       });
-  
+      
       if (response.ok) {
         alert('Avaliações salvas com sucesso!');
         await gerarFormularios(turno);
@@ -111,15 +74,14 @@ export default function AdicionarColaborador() {
       console.error('Erro ao salvar avaliações:', error);
     }
   }, [avaliacoes, turno]);
-  
-  // Função para lidar com as mudanças nos campos de avaliação
+
   const handleChange = (matricula, campo, valor) => {
     setAvaliacoes(prevAvaliacoes => ({
       ...prevAvaliacoes,
       [matricula]: {
         ...prevAvaliacoes[matricula],
         [campo]: valor,
-        alterado: true // Marcar como alterado sempre que houver mudança
+        alterado: true
       }
     }));
   };
@@ -248,18 +210,14 @@ export default function AdicionarColaborador() {
 
             <label className={styles.customLabel}>Observação:</label>
             <textarea
-              name={`observacao-${colaborador.matricula}`}
-              rows="4"
-              cols="50"
-              className={styles.observacaoInput}
               value={avaliacoes[colaborador.matricula]?.observacao || ''}
               onChange={(e) => handleChange(colaborador.matricula, 'observacao', e.target.value)}
-            ></textarea>
+            />
           </div>
         ))}
       </div>
 
-      <button onClick={salvarAvaliacoes} className={styles.salvarBtn}>Salvar Avaliações</button>
+      <button className={styles.botaoSalvar} onClick={salvarAvaliacoes}>Salvar Avaliações</button>
     </div>
   );
 }

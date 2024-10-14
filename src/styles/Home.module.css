@@ -88,6 +88,7 @@
 
 /* Área de Conteúdo */
 .mainContent {
+    height: 80vh;
     margin-left: 0; /* Ajuste padrão */
     padding: 20px;
     transition: margin-left 0.3s;
