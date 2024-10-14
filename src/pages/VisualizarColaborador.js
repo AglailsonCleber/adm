@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react';
 import styles from '../styles/VisualizarColaborador.module.css';
 
 const VisualizarColaborador = () => {
-  const [colaboradores, setColaboradores] = useState([]); // Inicializa como array vazio
-  const [avaliacoes, setAvaliacoes] = useState([]); // Inicializa como array vazio
+  const [colaboradores, setColaboradores] = useState([]); 
+  const [avaliacoes, setAvaliacoes] = useState([]); 
   const [avaliacoesFiltradas, setAvaliacoesFiltradas] = useState({});
-  const [turnoAtivo, setTurnoAtivo] = useState('ADM'); // Estado para armazenar o turno ativo
+  const [turnoAtivo, setTurnoAtivo] = useState('ADM');
 
   // Fazer a requisição à API
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseColaboradores = await fetch('/api/getDadosColaboradores'); // Corrigido para o nome correto da API
+        const responseColaboradores = await fetch('/api/getDadosColaboradores'); 
         const dataColaboradores = await responseColaboradores.json();
-        const responseAvaliacoes = await fetch('/api/getDadosAvaliacoes'); // Corrigido para o nome correto da API
+        const responseAvaliacoes = await fetch('/api/getDadosAvaliacoes'); 
         const dataAvaliacoes = await responseAvaliacoes.json();
         setColaboradores(dataColaboradores.colaboradores);
         setAvaliacoes(dataAvaliacoes.avaliacoes);
@@ -28,7 +28,7 @@ const VisualizarColaborador = () => {
   // Lógica de filtragem das avaliações
   useEffect(() => {
     if (!avaliacoes || avaliacoes.length === 0) {
-      return; // Não faz nada se avaliacoes não estiver definido ou vazio
+      return; 
     }
 
     const ultimaAvaliacaoPorMatricula = {};

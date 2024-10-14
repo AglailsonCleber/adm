@@ -2,16 +2,18 @@ import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../styles/AdicionarAvaliacoes.module.css';
 
 export default function AdicionarAvaliacoes() {
-  const [colaboradores, setColaboradores] = useState([]);
+  const [colaboradores, setColaboradores] = useState([]); // Colaboradores originais
+  const [colaboradoresFiltrados, setColaboradoresFiltrados] = useState([]); // Colaboradores filtrados
   const [avaliacoes, setAvaliacoes] = useState([]);
   const [turno, setTurno] = useState('ADM');
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('/api/getDadosColaboradores');
         const data = await response.json();
         setColaboradores(data.colaboradores);
+        setColaboradoresFiltrados(data.colaboradores); // Inicializa com todos os colaboradores
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
       }
@@ -20,8 +22,9 @@ export default function AdicionarAvaliacoes() {
   }, []);
 
   const gerarFormularios = async (turno) => {
+    // Filtra os colaboradores com base no turno
     const colaboradoresFiltrados = colaboradores.filter(c => c.turno === turno);
-    setColaboradores(colaboradoresFiltrados);
+    setColaboradoresFiltrados(colaboradoresFiltrados);
 
     const avaliacoesIniciais = {};
     colaboradoresFiltrados.forEach(colaborador => {
@@ -32,7 +35,7 @@ export default function AdicionarAvaliacoes() {
         autonomia: '',
         desafios: '',
         observacao: '',
-        alterado: false
+        alterado: false,
       };
     });
     setAvaliacoes(avaliacoesIniciais);
@@ -40,13 +43,13 @@ export default function AdicionarAvaliacoes() {
 
   useEffect(() => {
     gerarFormularios(turno);
-  }, [turno]);
+  }, [turno, colaboradores]); // Adicione colaboradores como dependência para garantir que as avaliações sejam geradas corretamente
 
   const salvarAvaliacoes = useCallback(async () => {
     const avaliacoesParaSalvar = Object.keys(avaliacoes)
       .map(matricula => ({
         matricula,
-        ...avaliacoes[matricula]
+        ...avaliacoes[matricula],
       }))
       .filter(avaliacao => avaliacao.alterado);
 
@@ -61,12 +64,12 @@ export default function AdicionarAvaliacoes() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ avaliacoes: avaliacoesParaSalvar, turno })
+        body: JSON.stringify({ avaliacoes: avaliacoesParaSalvar, turno }),
       });
-      
+
       if (response.ok) {
         alert('Avaliações salvas com sucesso!');
-        await gerarFormularios(turno);
+        await gerarFormularios(turno); // Gera os formulários novamente após salvar
       } else {
         alert('Erro ao salvar avaliações.');
       }
@@ -81,8 +84,8 @@ export default function AdicionarAvaliacoes() {
       [matricula]: {
         ...prevAvaliacoes[matricula],
         [campo]: valor,
-        alterado: true
-      }
+        alterado: true,
+      },
     }));
   };
 
@@ -100,7 +103,7 @@ export default function AdicionarAvaliacoes() {
       </div>
 
       <div id="colaboradoresContainer">
-        {colaboradores.map(colaborador => (
+        {colaboradoresFiltrados.map(colaborador => (
           <div key={colaborador.matricula} className={styles.colaboradorForm}>
             <h3>{colaborador.nome} - Matrícula: {colaborador.matricula}</h3>
 
