@@ -30,10 +30,30 @@ export default function Home() {
       </Head>
 
       <header className={styles.header}>
+      <div className={styles.buttonContainer}>
+        <button
+          className={styles.menuButton}
+          onClick={(e) => {
+            e.preventDefault();
+            openIframe('./VisualizarColaborador');
+          }}
+        >
+          Visualizar Dados
+        </button>
+        <button
+          className={styles.menuButton}
+          onClick={(e) => {
+            e.preventDefault();
+            openIframe('./AdicionarAvaliacoes');
+          }}
+        >
+          Adicionar Dados
+        </button>
+      </div>
         <button className={styles.openbtn} onClick={openMenu}>
           ☰ Menu
         </button>
-        <h1>Avaliação de Desempenho da Manutenção</h1>
+        <h1 className={styles.title}>Avaliação de Desempenho da Manutenção</h1>
       </header>
 
       <div className={`${styles.sidemenu} ${menuOpen ? styles.open : ''}`}>

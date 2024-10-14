@@ -4,8 +4,8 @@ import styles from '../styles/AdicionarAvaliacoes.module.css';
 export default function AdicionarAvaliacoes() {
   const [colaboradores, setColaboradores] = useState([]); // Colaboradores originais
   const [colaboradoresFiltrados, setColaboradoresFiltrados] = useState([]); // Colaboradores filtrados
-  const [avaliacoes, setAvaliacoes] = useState([]);
-  const [turno, setTurno] = useState('ADM');
+  const [avaliacoes, setAvaliacoes] = useState([]); // Avaliações dos colaboradores
+  const [turno, setTurno] = useState('ADM'); // Estado para o turno selecionado
 
   useEffect(() => {
     const fetchData = async () => {
@@ -215,12 +215,14 @@ export default function AdicionarAvaliacoes() {
             <textarea
               value={avaliacoes[colaborador.matricula]?.observacao || ''}
               onChange={(e) => handleChange(colaborador.matricula, 'observacao', e.target.value)}
+              rows="3"
+              placeholder="Adicione uma observação..."
             />
           </div>
         ))}
       </div>
 
-      <button className={styles.botaoSalvar} onClick={salvarAvaliacoes}>Salvar Avaliações</button>
+      <button className={styles.salvarBtn} onClick={salvarAvaliacoes}>Salvar Avaliações</button>
     </div>
   );
 }
