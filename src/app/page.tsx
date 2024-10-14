@@ -18,6 +18,7 @@ export default function Home() {
 
   const openIframe = (src: string) => {
     setIframeSrc(src);
+    closeMenu(); // Fecha o menu ao abrir um iframe
   };
 
   return (

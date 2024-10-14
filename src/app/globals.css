@@ -25,3 +25,25 @@ body {
     text-wrap: balance;
   }
 }
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* Responsividade */
+/* @media screen and (max-width: 768px) { */
+  /* Ajustes para tablets e dispositivos menores */
+  /* iframe { */
+      /* height: 60vh; Reduz a altura do iframe em telas menores */
+  /* } */
+/* } */
+
+/* @media screen and (max-width: 480px) { */
+  /* Ajustes para smartphones */
+  /* iframe { */
+      /* height: 50vh; Reduz ainda mais a altura do iframe em smartphones */
+  /* } */
+/* } */

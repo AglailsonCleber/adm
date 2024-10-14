@@ -96,7 +96,34 @@
 
 /* Responsividade */
 @media screen and (max-width: 600px) {
+    .sidemenu {
+        width: 200px; /* Largura do menu menor em telas pequenas */
+    }
+
     .sidemenu a {
-        font-size: 16px;
+        font-size: 16px; /* Ajusta o tamanho da fonte dos links */
+    }
+
+    .openbtn {
+        font-size: 18px; /* Ajusta o tamanho da fonte do botão de abrir */
+        padding: 8px 12px; /* Ajusta o padding do botão */
+    }
+
+    .mainContent {
+        padding: 15px; /* Reduz o padding do conteúdo principal */
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .sidemenu {
+        width: 100%; /* O menu ocupa toda a largura da tela */
+    }
+
+    .sidemenu a {
+        font-size: 14px; /* Reduz o tamanho da fonte dos links ainda mais */
+    }
+
+    .openbtn {
+        width: 100%; /* O botão ocupa toda a largura disponível */
     }
 }

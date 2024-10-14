@@ -1,15 +1,29 @@
 /* styles/VisualizarColaborador.module.css */
 
+/* Estilos para o contêiner */
+.container {
+    padding: 20px;
+}
+
 /* Estilos para o menu de abas */
 .tabMenu {
     overflow: hidden;
     background-color: #f1f1f1;
     border-bottom: 1px solid #ccc;
+    width: 100%; /* Assegura que o menu tenha a mesma largura da tabela */
+}
+
+.tabMenuMobile {
+    display: flex;
+    flex-direction: column; /* Muda para vertical em dispositivos móveis */
+}
+
+.tabMenuDesktop {
+    display: flex; /* Horizontal em desktop */
 }
 
 .tabLink {
     background-color: inherit;
-    float: left;
     border: none;
     outline: none;
     cursor: pointer;
@@ -29,62 +43,56 @@
 
 /* Estilos para o conteúdo das abas */
 .tabContent {
-    /* display: none; */
     height: auto;
-    width: 97%;
-
-    padding: 20px;
-}
-
-.tabContent h2 {
-    margin-top: 0;
+    width: 100%; /* Alterado para 100% para melhor responsividade */
+    /* padding: 20px; */
 }
 
 /* Estilo básico da tabela */
 .table {
-    width: 100%; /* A tabela ocupa toda a largura disponível */
-    border-collapse: collapse; /* Remove espaços entre as células da tabela */
-    margin: 20px 0; /* Margem superior e inferior */
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
     font-size: 16px;
     text-align: left;
 }
 
 /* Estilo para o cabeçalho da tabela */
 .table thead th {
-    background-color: #326ab3; /* Cor de fundo do cabeçalho */
-    color: white; /* Cor do texto no cabeçalho */
-    padding: 12px 15px; /* Espaçamento interno das células do cabeçalho */
-    text-align: left;
-    border-bottom: 2px solid #ddd; /* Linha inferior do cabeçalho */
+    background-color: #326ab3;
+    color: white;
+    padding: 12px 15px;
+    border-bottom: 2px solid #ddd;
 }
 
 /* Estilo para o corpo da tabela */
 .table tbody td {
-    padding: 12px 15px; /* Espaçamento interno das células do corpo */
-    border-bottom: 1px solid #ddd; /* Linha inferior das células */
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
 }
 
-/* Cor de fundo alternada para as linhas */
-.table tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* Cor de fundo para as linhas pares */
+/* Estilo para os cartões móveis */
+.mobileCard {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
 }
 
-/* Cor de fundo ao passar o mouse sobre uma linha */
-.table tbody tr:hover {
-    background-color: #f1f1f1; /* Cor de fundo ao passar o mouse */
+/* Responsividade */
+@media (max-width: 1115px) {
+    .table {
+        display: none; /* Oculta a tabela em dispositivos móveis */
+    }
+
+    .mobileCard {
+        display: block; /* Garante que os cartões sejam exibidos */
+    }
 }
 
-/* Estilo para a primeira célula da linha */
-.table tbody tr td:first-child {
-    font-weight: bold; /* Negrito na primeira célula */
-}
-
-/* Estilo para links dentro da tabela */
-.table tbody tr td a {
-    color: #326ab3; /* Cor do link */
-    text-decoration: none; /* Remove o sublinhado */
-}
-
-.table tbody tr td a:hover {
-    text-decoration: underline; /* Adiciona sublinhado ao passar o mouse sobre o link */
+@media (min-width: 1116px) {
+    .mobileCard {
+        display: none; /* Oculta os cartões em telas maiores */
+    }
 }

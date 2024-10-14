@@ -1,3 +1,5 @@
+/* styles/AdicionarAvaliacoes.module.css */
+
 .colaboradorForm {
     border: 1px solid #ddd;
     padding: 15px;
@@ -20,6 +22,7 @@
     padding: 10px 20px;
     border: none;
     cursor: pointer;
+    width: 100%; /* Botão ocupa toda a largura disponível */
 }
 
 .salvarBtn:hover {
@@ -30,4 +33,36 @@
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .colaboradorForm {
+        padding: 10px; /* Reduz o preenchimento do formulário em telas menores */
+    }
+
+    .salvarBtn {
+        padding: 8px 15px; /* Ajusta o tamanho do botão */
+        font-size: 14px; /* Ajusta o tamanho da fonte do botão */
+    }
+
+    .radioGroup {
+        flex-direction: column; /* Alinha os itens do grupo de rádio verticalmente em telas menores */
+        gap: 5px; /* Reduz o espaço entre os botões de opção */
+    }
+}
+
+@media (max-width: 480px) {
+    .colaboradorForm {
+        padding: 5px; /* Reduz ainda mais o preenchimento do formulário */
+    }
+
+    .customLabel {
+        font-size: 14px; /* Ajusta o tamanho da fonte do rótulo */
+    }
+
+    .salvarBtn {
+        padding: 8px; /* Ajusta o tamanho do botão */
+        font-size: 12px; /* Ajusta o tamanho da fonte do botão */
+    }
 }
